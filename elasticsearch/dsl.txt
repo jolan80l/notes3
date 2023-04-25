@@ -1,0 +1,494 @@
+
+//删除索引
+DELETE /hotel
+
+//创建索引
+PUT /hotel 
+{ 
+    "mappings":{ 
+        "properties":{
+            "title":{ 
+                "type":"text"
+            }, 
+            "city":{ 
+               "type":"keyword"
+            }, 
+            "price":{ 
+                "type":"double"
+            } 
+        } 
+    } 
+}
+
+//关闭索引
+POST /hotel/_close
+
+
+//打开索引
+POST /hotel/_open 
+
+
+//索引别名
+//创建一月份索引
+PUT /january_log 
+{ 
+    "mappings":{ 
+        "properties":{ 
+            "uid":{ 
+                "type":"keyword" 
+            }, 
+            "hotel_id":{  
+                "type":"keyword" 
+            }, 
+            "check_in_date":{ 
+                "type":"keyword" 
+            } 
+        } 
+    } 
+}
+//向一月份索引写入数据
+POST /january_log/_doc/001 
+{                                 
+  "uid":"001", 
+  "hotel_id":"92772", 
+  "check_in_date":"2021-01-05" 
+}
+//创建二月份索引
+PUT /february_log 
+{ 
+    "mappings":{ 
+        "properties":{ 
+            "uid":{ 
+                "type":"keyword" 
+            }, 
+            "hotel_id":{  
+                "type":"keyword" 
+            }, 
+            "check_in_date":{ 
+                "type":"keyword" 
+            } 
+        } 
+    } 
+}
+//向二月份索引写入数据
+POST /february_log/_doc/001 
+{
+  "uid":"001", 
+  "hotel_id":"33224", 
+  "check_in_date":"2021-02-23" 
+}
+//向三月份索引写入数据
+POST /march_log/_doc/001 
+{
+  "uid":"001", 
+  "hotel_id":"92772", 
+  "check_in_date":"2021-03-28" 
+}
+//创建别名last_three_month
+POST /_aliases 
+{ 
+  "actions": [ 
+    { 
+      "add": {
+        "index": "january_log", 
+        "alias": "last_three_month" 
+      } 
+    }, 
+    { 
+      "add": { 
+        "index": "february_log", 
+        "alias": "last_three_month" 
+      } 
+    }, 
+    { 
+      "add": {
+        "index": "march_log", 
+        "alias": "last_three_month" 
+      } 
+    } 
+  ] 
+}
+//查询别名，命中三个索引
+GET /last_three_month/_search 
+{ 
+  "query": { 
+    "term": {
+      "uid": "001" 
+    } 
+  } 
+}
+
+
+
+//查看文档映射
+GET /hotel/_mapping  
+
+
+
+//扩展映射，索引中新增字段tag，类型为keyword 
+POST /hotel/_mapping 
+{ 
+  "properties": { 
+    "tag": { 
+      "type": "keyword" 
+    } 
+  } 
+}
+
+
+
+//keyword
+PUT /user 
+{ 
+  "mappings": { 
+    "properties": { 
+      "user_name":{
+        "type": "keyword" 
+      } 
+    } 
+  } 
+}
+
+POST /user/_doc/001 
+{ 
+  "user_name":"张三" 
+}
+
+GET /user/_search 
+{ 
+  "query": { 
+   "term": {
+      "user_name": { 
+        "value": "张三" 
+      } 
+    }  
+  } 
+}
+
+
+
+//text
+POST /hotel/_doc/001 
+{
+   "title":"文雅酒店" 
+}
+//使用term搜索查不到text类型数据
+GET /hotel/_search 
+{ 
+  "query": { 
+   "term": {
+      "title": { 
+        "value": "文雅酒店" 
+      } 
+    } 
+  } 
+}
+
+GET /hotel/_search 
+{ 
+  "query": { 
+   "match": {
+      "title": "文雅" 
+    } 
+  } 
+}
+
+
+//数值类型
+PUT /hotel 
+{ 
+    "mappings":{ 
+        "properties":{ 
+            "title":{ 
+                "type":"text" 
+            }, 
+            "city":{ 
+                "type":"keyword" 
+            }, 
+            "price":{ 
+                "type":"double" 
+            }, 
+            "star":{
+                "type":"byte" 
+            }, 
+            "comment_count":{ 
+                "type":"integer" 
+            } 
+        } 
+    } 
+}
+
+GET /hotel/_search 
+{ 
+  "query": { 
+   "range": {
+      "price": { 
+        "gte": 350, 
+        "lte": 400 
+      } 
+    } 
+  } 
+}
+
+
+//布尔类型
+PUT /hotel 
+{ 
+    "mappings":{ 
+        "properties":{ 
+            "title":{ 
+                "type":"text" 
+            }, 
+            "city":{ 
+                "type":"keyword" 
+            }, 
+            "price":{ 
+                "type":"double" 
+            }, 
+            "full_room":{
+              "type": "boolean" 
+            } 
+        } 
+    } 
+}
+
+GET /hotel/_search 
+{ 
+  "query": { 
+    "term": { 
+      "full_room": {
+        "value": "true" 
+      } 
+    } 
+  } 
+}
+
+
+//日期类型
+PUT /hotel 
+{ 
+    "mappings":{ 
+        "properties":{ 
+            "title":{ 
+                "type":"text" 
+            }, 
+            "city":{ 
+                "type":"keyword" 
+            }, 
+            "price":{ 
+                "type":"double" 
+            }, 
+            "create_time":{
+                "type":"date" 
+            } 
+        } 
+    } 
+}
+
+POST /hotel/_doc/001 
+{
+  "title":"好再来酒店",  
+  "city":"青岛", 
+  "price":578.23, 
+  "create_time":"20210115" 
+}
+
+GET /hotel/_search 
+{ 
+  "query": { 
+   "range": {
+      "create_time": { 
+        "gte": "20150101", 
+        "lt": "20160101" 
+      } 
+    } 
+  } 
+}
+
+//数组类型
+POST /hotel/_doc/001 
+{ 
+  "title":"好再来酒店", 
+  "city":"青岛", 
+  "price":578.23, 
+  "tag":["有车位","免费WIFI"]
+}
+
+GET /hotel/_doc/001
+
+GET /hotel/_search 
+{ 
+  "query": { 
+   "term": {
+      "tag": { 
+        "value": "有车位" 
+      } 
+    } 
+  } 
+}
+
+POST /hotel/_doc/002 
+{     
+    "title":"环球酒店", 
+    "city":"青岛", 
+    "price":530.00, 
+    "tag":[]
+} 
+
+
+
+
+//对象类型
+POST /hotel/_doc/001 
+{ 
+  "title": "好再来酒店", 
+  "city": "青岛", 
+  "price": 578.23, 
+      "comment_info": {
+      "properties": { 
+        "favourable_comment":199,
+        "negative_comment": 68 
+      } 
+    } 
+}   
+
+//这里看到comment_info里面有三个properties。第一个properties表示是结构，第二个properties表示这是一个名称为properties的结构体，第三个properties表示它是properties的properties。这里有点绕
+GET /hotel/_mapping
+
+//查看大于200的评论
+GET /hotel/_search 
+{ 
+  "query": { 
+   "range": {
+      "comment_info.properties.favourable_comment": { 
+        "gte": 200
+      } 
+    } 
+  } 
+}  
+
+//结构中再包含结构
+POST /hotel/_doc/001 
+{   
+  "title": "好再来酒店", 
+  "city": "青岛", 
+  "price": 578.23,
+  "comment_info": { 
+    "properties": { 
+      "favourable_comment": 199, 
+      "negative_comment": 68, 
+      "top3_favourable_comment": { 
+       "top1": {                     
+          "content": "干净整洁的一家酒店", 
+          "score": 87 
+        }, 
+       "top2": {                    
+          "content": "服务周到，停车方便", 
+          "score": 89 
+        }, 
+        "top3":  {                  
+          "content": "闹中取静，环境优美", 
+          "score": 90 
+        } 
+      } 
+    } 
+  } 
+}    
+
+
+
+//地理类型
+PUT /hotel 
+{ 
+  "mappings": { 
+    "properties": { 
+      "title": { 
+        "type": "text" 
+      }, 
+      "city": { 
+        "type": "keyword" 
+      }, 
+      "price": { 
+        "type": "double" 
+      }, 
+      "create_time": { 
+        "type": "date" 
+      }, 
+      "location": { 
+        "type": "geo_point" 
+      } 
+    } 
+  } 
+}  
+POST /hotel/_doc/001 
+{ 
+  "title": "文雅酒店", 
+  "city": "北京", 
+  "price": 556, 
+  "create_time": "2021-01-15", 
+ "location": {  
+    "lat": 40.012134, 
+    "lon": 116.497553 
+  } 
+}  
+
+
+
+//多字段。username字段既是text类型，又是keyword类型
+PUT /hotel_order 
+{ 
+  "mappings": { 
+    "properties": { 
+      "order_id": {
+        "type": "keyword" 
+      }, 
+      "user_id": {
+        "type": "keyword" 
+      }, 
+      "user_name": {
+        "type": "text", 
+        "fields": { 
+          "user_name_keyword": { 
+            "type": "keyword" 
+          } 
+        } 
+      }, 
+      "hotel_id": { 
+        "type": "keyword" 
+      } 
+    } 
+  } 
+} 
+
+POST /_bulk 
+{"index":{"_index":"hotel_order","_id":"001"}} 
+{"order_id": "001","user_id":"user_00x","user_name":"Michael Jordan", 
+"hotel_id":"h001"} 
+{"index":{"_index":"hotel_order","_id":"002"}} 
+{"order_id": "002","user_id":"user_00a","user_name":"Stephen Jordan", 
+"hotel_id":"h0500"} 
+{"index":{"_index":"hotel_order","_id":"003"}} 
+{"order_id": "003","user_id":"user_30e","user_name":"Tim Jordan", 
+"hotel_id":"h0520"} 
+{"index":{"_index":"hotel_order","_id":"004"}} 
+{"order_id": "004","user_id":"user_430","user_name":"Kobe Jordan", 
+"hotel_id":"h0600"} 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

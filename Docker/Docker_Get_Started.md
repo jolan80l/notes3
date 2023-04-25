@@ -162,6 +162,10 @@ docker run --name kibana -e ELASTICSEARCH_HOSTS=http://192.168.10.183:9200 -p 56
 
 ![avatar](img/7.png)
 
+如果需要频繁修改ip地址（换了个网络），可以参考下面的办法：
+
+![avatar](img/8.png)
+
 
 
 
