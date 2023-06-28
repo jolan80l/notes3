@@ -39,6 +39,19 @@ Azure 中国镜像	https://dockerhub.azk8s.cn
 
 ![avatar](img/1.png)
 
+修改完成后，点击右下角的应用并重启。在一下路径下，也可以直接修改文件。
+
+- Linux: /etc/docker/daemon.json
+
+- Windows: %USERPROFILE%\.docker\daemon.json 或 %programdata%\Docker\config\daemon.json
+
+- MacOS: ~/.docker/daemon.json
+
+作者：喵个咪
+链接：https://juejin.cn/post/7165806699461378085
+来源：稀土掘金
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+
 # 使用docker安装redis
 
 为什么是安装redis？前面不是说学习Elasticsearch？没办法,视频教程里面就是这样教的，而且本文的目的是为了学习Docker，redis还是Elasticsearch并不重要。
@@ -167,6 +180,83 @@ docker run --name kibana -e ELASTICSEARCH_HOSTS=http://192.168.10.183:9200 -p 56
 ![avatar](img/8.png)
 
 
+# 安装nacos
+
+首先下载nacos的镜像。下载镜像时，注意镜像的cpu架构，比如我当前使用的是苹果的M1芯片，他属于arm架构。nacos的版本可以到docker镜像官网查看：https://hub.docker.com/。（点击进入nacos/nacos-server镜像，点击tags标签）
+
+![avatar](img/9.png)
+
+然后在本地拉取镜像，执行命令。其中最后冒号后面是要拉去的版本。--name表示容器名称，-d表示后台运行
+
+```shell
+docker run -p 8848:8848 --name nacos -d nacos/nacos-server:v2.2.2-slim
+```
+
+然后在本机电脑合适的路径下创建宿主机和docker内部的文件映射路径：
+
+```shell
+mkdir /Users/xxx/softwares/nacos/mydata/logs
+mkdir /Users/xxx/softwares/nacos/mydata/conf
+```
+
+然后将docker中的文件拷贝到宿主机中。其中前面的路径表示宿主机中的路径。这一步启动nacos是为了将nacos里面的文件拷贝出到挂载目录中，这样我们就可以直接修改挂载目录中文件来映射到容器里面去了。
+
+```shell
+docker cp nacos:/home/nacos/logs/ /Users/xxx/softwares/nacos/mydata/logs
+docker cp nacos:/home/nacos/conf/ /Users/xxx/softwares/nacos/mydata/conf
+```
+
+如上面提到的，这一步就是为了获得nacos的配置文件，此时nacos的容器已经可以销毁了，因为后面需要更为复杂的启动参数。
+
+```shell
+docker rm -f nacos
+```
+
+创建mysql数据库，数据库名称可以叫nacos_config，执行脚本在nacos的安装文件中可以找到。
+
+![avatar](img/10.png)
+
+修改nacos的配置文件，也就是刚刚从docker中拷贝出来的文件。主要是application.properties文件。再原有基础上增加下面的数据库配置。需要注意的是，如果数据库也是使用docker启动的，再次启动docker时可能会报数据源找不到的错误，是因为两个docker容器之间ip不同，这里的localhost是指nacos容器的ip，而不是数据库的ip。我这里把localhost改成了宿主机ip就可以了，其他方案可参考：https://blog.csdn.net/qq_45534014/article/details/121741552
+
+```properties
+spring.datasource.platform=mysql
+db.num=1
+db.url.0=jdbc:mysql://localhost:3306/nacos-config?characterEncoding=utf8&connectTimeout=1000&socketTimeout=30000&autoReconnect=true&useUnicode=true&useSSL=false&serverTimezone=UTC
+db.user=root
+db.password=root
+```
+
+最后重新创建nacos容器并启动：
+
+```shell
+docker run -d --name nacos -p 8848:8848  -p 9848:9848 -p 9849:9849 --privileged=true -e JVM_XMS=256m -e JVM_XMX=256m -e MODE=standalone -v /Users/xxx/softwares/nacos/mydata/logs:/home/nacos/logs -v /Users/xxx/softwares/nacos/mydata/conf:/home/nacos/conf --restart=always nacos/nacos-server:v2.2.2-slim
+```
+
+- docker run -d ： 启动容器 -d是后台启动并返回容器id的意思
+
+- –name nacos ：为容器指定一个名称
+
+- -p 8848:8848 -p 9848:9848 -p 9849:9849 ： 指定端口映射，注意这里的p不能大写，大写是随机端口映射
+
+- –privileged=true ： 扩大容器内的权限，将容器内的权限变为root权限，不加的话就是普通用户权限，可能会出现cannot open directory
+
+- -e JVM_XMS=256m ： 为jvm启动时分配的内存
+
+- -e JVM_XMX=256m ： 为jvm运行过程中分配的最大内存
+
+- -e MODE=standalone ： 使用 standalone模式（单机模式）,MODE值有cluster（集群）模式/standalone模式两种，MODE必须大写
+
+- -v /mydata/nacos/logs/:/home/nacos/logs : 将容器的/home/nacos/logs目录挂载到 /mydata/nacos/logs
+
+- -v /mydata/nacos/conf/:/home/nacos/conf/： 将容器的/home/nacos/conf目录挂载到 /mydata/nacos/conf
+
+- –restart=always ：重启docker时，自动启动相关容器
+
+最后在网页访问nacos：http://ip:8848/nacos/index.html
+
+![avatar](img/11.png)
+
+![avatar](img/12.png)
 
 
 
