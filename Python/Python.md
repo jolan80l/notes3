@@ -8,7 +8,7 @@
 
 到官网下载python的安装版本，官网地址：https://www.python.org/
 
-推荐参考文章：https://zhuanlan.zhihu.com/p/569019068
+推荐参考文章：https://zhuanlan.zhihu.com/p/569019068
 
 ## mac安装
 
@@ -16,7 +16,10 @@
 
 前提电脑上安装了brew，推荐安装文章：https://blog.csdn.net/muyimo/article/details/125211460
 
-vi ~/.bash_profile 在最后增加 ：
+```shell
+vi ~/.bash_profile
+```
+在最后增加(然后保存退出) ：
     export PYENV_ROOT=~/.pyenv
     export PATH=$PYENV_ROOT/shims:$PATH
     eval "$(pyenv init -)"
@@ -53,7 +56,6 @@ import os os.environ['TK_SILENCE_DEPRECATION'] = '1'
 
 试用方法：https://blog.csdn.net/For_if_while/article/details/121513041
 
-
 # Python基础
 
 ## 表达式
@@ -88,7 +90,7 @@ spam = 'Hello'
 
 变量只能是一个词，只能包含字母、数字、下划线，不能以数字开头。变量名区分大小写。
 
-## 第一个程序
+## 第一个程序
 
 ```python
 # This program says hello and asks for my name.
@@ -109,15 +111,15 @@ print('You will be ' + str(int(myAge) + 1) + ' in a year.')
 
 注释：使用#表示注释
 
-print()：将括号内的字符串显示在屏幕上
+print()：将括号内的字符串显示在屏幕上
 
-input()：函数等待用户在键盘上输入一些文本，并按下回车键。
+input()：函数等待用户在键盘上输入一些文本，并按下回车键。
 
 len()：字符串中字符的个数。
 
 str(29)：表示把整形转为字符串形式。
 
-int()：把字符串转为整形。如果传入的参数不能被转换为整形，则会报错。
+int()：把字符串转为整形。如果传入的参数不能被转换为整形，则会报错。
 
 int('99.99')
 Traceback (most recent call last):
@@ -125,7 +127,7 @@ Traceback (most recent call last):
     int('99.99')
 ValueError: invalid literal for int() with base 10: '99.99'
 
-float()：字符串转换为浮点数。
+float()：字符串转换为浮点数。
 
 ## 文本和数字相等判断
 
