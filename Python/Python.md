@@ -433,6 +433,216 @@ cats dogs mice
 cats,dogs,mice
 ```
 
+## global语句
+
+如果需要在一个函数内修改全局变量，就使用global语句。如果在函数的顶部有global eggs这样的代码，它就告诉Python，“在这个函数中，eggs指的是全局变量，所以不要用这个名字创建一个局部变量。
+
+比如要修改全局变量param的值，可以使用这种用法。这样在方法内部和方法外部都会输出2。
+
+```python
+def test_function():
+    global param
+    param += 1
+    print('inner print:' + str(param))
+
+
+param = 1
+test_function()
+print('outer print:' + str(param))
+```
+
+如果像java一样，如下所示，在方法中会输出2，在外面会输出1。那么说明python的参数传递是值传递么？这里先画一个问号？
+
+```python
+def test_function(param):
+    param += 1
+    print('inner print:' + str(param))
+
+
+param = 1
+test_function(param)
+print('outer print:' + str(param))
+```
+
+## 变量作用域
+
+有4条法则，来区分一个变量是处于局部作用域还是全局作用域：
+
+1．如果变量在全局作用域中使用（即在所有函数之外），它就总是全局变量。
+
+2．如果在一个函数中，有针对该变量的global语句，它就是全局变量。
+
+3．否则，如果该变量用于函数中的赋值语句，它就是局部变量。
+
+4．但是，如果该变量没有用在赋值语句中，它就是全局变量。
+
+## 异常处理
+
+错误可以由try和except语句来处理。那些可能出错的语句被放在try子句中。如果错误发生，程序执行就转到接下来的except子句开始处。一旦执行跳到except子句的代码，就不会回到try子句。它会继续照常向下执行。
+
+```python
+def spam(divideBy):
+    try:
+        return 42 / divideBy
+    except ZeroDivisionError:
+        print('Error: Invalid argument.')
+
+
+print(spam(2))
+print(spam(12))
+print(spam(0))
+print(spam(1))
+
+```
+
+```
+21.0
+3.5
+Error: Invalid argument.
+None
+42.0
+```
+## 猜数游戏
+
+展示一个简单的猜数字游戏。如下所示：
+
+```
+I am thinking of a number between 1 and 20.
+Take a guess.
+10
+Your guess is too low.
+Take a guess.
+15
+Your guess is too low.
+Take a guess.
+17
+Your guess is too high.
+Take a guess.
+16
+Good job! You guessed my number in 4 guesses!
+```
+
+我编写的代码:
+
+```python
+import random
+
+
+def compare(input_number):
+    if input_number == random_number:
+        return True
+    elif input_number < random_number:
+        print('Your guess is too low.')
+    else:
+        print('Your guess is too high.')
+    print('Take a guess.')
+    return False
+
+
+random_number = random.randint(1, 20)
+times = 0
+print('I am thinking of a number between 1 and 20.')
+while True:
+    times += 1
+    if compare(int(input())):
+        break
+print('Good job! You guessed my number in ' + str(times) + ' guesses!')
+
+```
+
+书中案例：
+
+```python
+# This is a guess the number game.
+import random
+secretNumber=random.randint(1, 20)
+print('I am thinking of a number between 1 and 20.')
+
+# Ask the player to guess 6 times.
+for guessesTaken in range(1, 7):
+    print('Take a guess.')
+    guess=int(input())
+
+    if guess < secretNumber:
+        print('Your guess is too low.')
+    elif guess > secretNumber:
+        print('Your guess is too high.')
+    else:
+        break # This condition is the correct guess!
+if guess == secretNumber:
+    print('Good job! You guessed my number in ' + str(guessesTaken) + ' guesses!')
+else:
+    print('Nope. The number I was thinking of was ' + str(secretNumber))
+```
+
+
+# 列表
+
+## 列表定义和常用方法
+
+```python
+spam=['cat', 'bat', 'rat', 'elephant']
+```
+
+列表可以按下表取值，下表从0开始。如果下表超过列表长度，将会报错。
+
+列表也可以包括其他列表值，比如：
+
+```python
+spam=[['cat', 'bat'], [10, 20, 30, 40, 50]]
+```
+
+如果需要打印出bat可以这样写：spam[0][1]
+
+列表还可以使用负数下标。-1表示列表的最后一个元素，-2表示倒数第二个元素，以此类推。
+
+列表切片，也就是列表截取。如果要截取spam的第1个到第2个元素，可以这样写：spam[0:3]，中括号中的冒号左边表示其实位置，冒号右边表示截止位置，但是不包括这个位置。
+
+作为快捷方法，你可以省略切片中冒号两边的一个下标或两个下标。省略第一个下标相当于使用0，或列表的开始。省略第二个下标相当于使用列表的长度，意味着分片直至列表的末尾。
+
+len()函数可以用来获取列表的长度，如获取spam列表的长度可以这样写：len(spam)。如果len中的参数不是一个列表类型将会报错。
+
+spam[1]='jolan'，表示将列表中第2个元素的值修改为jolan。
+
++操作可以连接两个列表。
+
+```python
+list1 = [1, 2, 3]
+list2 = ['lucy', 'jim']
+list3 = list1 + list2
+for frequency in range(len(list1) + len(list2)):
+    print(list3[frequency])
+```
+
+```
+1
+2
+3
+lucy
+jim
+```
+
+*可以实现列表的复制，如spam * 3表示列表变为原来的3份
+
+```python
+['X', 'Y', 'Z'] * 3
+```
+
+del可以从列表中删除元素，如下面的代码将输出1 3
+
+```python
+list1 = [1, 2, 3]
+del list1[1]
+print(list1[0], list1[1])
+```
+
+
+
+
+
+
+
+
 
 
 
