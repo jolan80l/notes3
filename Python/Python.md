@@ -58,7 +58,7 @@ import os os.environ['TK_SILENCE_DEPRECATION'] = '1'
 
 # Python基础
 
-笔者在学习Python前具有java语言的相关经验，所以可能着重记录与Java的不同之处，相同之处忽略了。笔记以《Python编程快速上手：让繁琐的工作自动化》为基础。
+笔者在学习Python前具有java语言的相关经验，所以可能着重记录与Java的不同之处，相同之处忽略了。笔记以《Python编程快速上手：让繁琐的工作自动化》为基础。
 
 ## 表达式
 
@@ -150,7 +150,7 @@ True
 
 ![avatar](img/4.png)
 
-整型或浮点型的值永远不会与字符串相等。表达式42 == '42'求值为False是因为，Python认为整数42与字符串'42'不同。
+整型或浮点型的值永远不会与字符串相等。表达式42 == '42'求值为False是因为，Python认为整数42与字符串'42'不同。
 
 另一方面，<、>、<=和>=操作符仅用于整型和浮点型值。int和float可以比较。
 
@@ -437,7 +437,7 @@ cats,dogs,mice
 
 如果需要在一个函数内修改全局变量，就使用global语句。如果在函数的顶部有global eggs这样的代码，它就告诉Python，“在这个函数中，eggs指的是全局变量，所以不要用这个名字创建一个局部变量。
 
-比如要修改全局变量param的值，可以使用这种用法。这样在方法内部和方法外部都会输出2。
+比如要修改全局变量param的值，可以使用这种用法。这样在方法内部和方法外部都会输出2。
 
 ```python
 def test_function():
@@ -451,7 +451,7 @@ test_function()
 print('outer print:' + str(param))
 ```
 
-如果像java一样，如下所示，在方法中会输出2，在外面会输出1。那么说明python的参数传递是值传递么？这里先画一个问号？
+如果像java一样，如下所示，在方法中会输出2，在外面会输出1。那么说明python的参数传递是值传递么？这里先画一个问号？
 
 ```python
 def test_function(param):
@@ -684,7 +684,7 @@ print(cat.index('dog'))
 
 ### append和insert
 
-append是在列表的最后添加元素，insert是在指定的下表插入元素。
+append是在列表的最后添加元素，insert是在指定的下表插入元素。
 
 ```python
 pet = ['dog', 'cat', 'snake']
@@ -722,9 +722,9 @@ print(pet)
 ['dog', 'chicken', 'cat']
 ```
 
-### sort
+## sort
 
-对列表进行排序。排序时，需要注意一下几点。
+对列表进行排序。排序时，需要注意一下几点。
 
 - 不能对既有数字又有字符串值的列表排序，因为Python不知道如何比较它们。
 
@@ -745,6 +745,111 @@ print(pet)
 
 
 ```
+
+## 类似列表的类型：字符串和元组
+
+对列表的许多操作，也可以作用于字符串：按下标取值、切片、用于for循环、用于len()，以及用于in和not in操作符。
+
+```python
+strs = 'excellence'
+print(strs[0])
+print(strs[2:5])
+print(strs.index('l'))
+print('exc' in strs)
+for i in strs:
+    print('*** ' + i + ' ***')
+
+
+```
+
+```
+e
+cel
+4
+True
+*** e ***
+*** x ***
+*** c ***
+*** e ***
+*** l ***
+*** l ***
+*** e ***
+*** n ***
+*** c ***
+*** e ***
+```
+
+但列表和字符串在一个重要的方面是不同的。列表是“可变的”数据类型，它的值可以添加、删除或改变。但是，字符串是“不可变的”，它不能被更改。尝试对字符串中的一个字符重新赋值，将导致TypeError错误。
+
+“改变”一个字符串的正确方式，是使用切片和连接。构造一个“新的”字符串，从老的字符串那里复制一些部分。
+
+```python
+strs = 'I am best'
+s = strs[0:4] + ' the ' + strs[5:10]
+print(strs)
+print(s)
+
+
+```
+
+查看下面的代码，虽然box的结果都是[4, 5, 6]，但是第一种是覆盖了box中的值，而第二种是修改了box。
+
+```python
+box = [1, 2, 3]
+box = [4, 5, 6]
+print(box)
+box = [1, 2, 3]
+box = [4, 5, 6]
+del box[2]
+del box[1]
+del box[0]
+box.append(4)
+box.append(5)
+box.append(6)
+print(box)
+
+
+```
+
+下图中的eggs就是代码中的box：
+
+![avatar](img/6.jpg)
+
+![avatar](img/7.jpg)
+
+## 元组数据类型
+
+除了两个方面，“元组”数据类型几乎与列表数据类型一样。
+
+- 元组输入时用圆括号()，而不是用方括号[]
+
+- 元组像字符串一样，是不可变的。元组不能让它们的值被修改、添加或删除。下面的代码会报错：TypeError: 'tuple' object does not support item assignment
+
+
+```python
+container = ('egg', 98, 'books')
+container[1] = 99
+
+
+```
+
+如果元组中只有一个元素，需要在第一个元素后面加一个逗号，表明它是一个元组，否则，Python将认为，你只是在一个普通括号内输入了一个值。
+
+## list和tuple方法
+
+list方法可以将元组转换为列表，tuple可以将列表转换为元组。
+
+```python
+print(tuple(['cat', 'dog', 5]))
+print(list(('cat', 'dog', 5)))
+print(list('hello'))
+
+
+```
+
+
+
+
 
 
 
