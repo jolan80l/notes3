@@ -636,6 +636,121 @@ del list1[1]
 print(list1[0], list1[1])
 ```
 
+## in和not in
+
+利用in和not in操作符，可以确定一个值是否在列表中。如下面代码将输出True和False。
+
+```python
+list1 = [1, 2, 3]
+print(1 in list1)
+print(4 in list1)
+
+
+```
+
+### 列表的快速赋值
+
+将列表中的值快速的赋值给多个变量。如下面一段代码，将输出：fat black loud
+
+```python
+cat = ['fat', 'black', 'loud']
+size, color, disposition = cat
+print(size, color, disposition)
+
+
+```
+
+变量的数目和列表的长度必须严格相等，否则Python将给报错。
+
+## 增强的赋值操作
+
+针对+、-、*、/和%操作符，都有增强的赋值操作符
+
+![avatar](img/5.jpg)
+
+## 列表的方法
+
+### index
+
+列表值有一个index()方法，可以传入一个值，如果该值存在于列表中，就返回它的下标。如果该值不在列表中，Python就报ValueError。列表值有一个index()方法，可以传入一个值，如果该值存在于列表中，就返回它的下标。如果该值不在列表中，Python就报ValueError。如果列表中存在重复的值，就返回它第一次出现的下标。
+
+```python
+cat = ['fat', 'black', 'loud', 'fat']
+print(cat.index('black'))
+print(cat.index('dog'))
+
+
+```
+
+### append和insert
+
+append是在列表的最后添加元素，insert是在指定的下表插入元素。
+
+```python
+pet = ['dog', 'cat', 'snake']
+pet.append('duck')
+print(pet)
+pet.insert(1, 'chicken')
+print(pet)
+
+
+```
+
+```
+['dog', 'cat', 'snake', 'duck']
+['dog', 'chicken', 'cat', 'snake', 'duck']
+```
+
+### remove
+
+给 remove()方法传入一个值，它将从被调用的列表中删除。如果该值在列表中出现多次，只有第一次出现的值会被删除。和del相比较，remove是按照元素的值删除，del是按照下标来删除。
+
+```python
+pet = ['dog', 'cat', 'snake']
+pet.append('duck')
+print(pet)
+pet.insert(1, 'chicken')
+print(pet)
+pet.remove('duck')
+del pet[-1]
+print(pet)
+```
+
+```
+['dog', 'cat', 'snake', 'duck']
+['dog', 'chicken', 'cat', 'snake', 'duck']
+['dog', 'chicken', 'cat']
+```
+
+### sort
+
+对列表进行排序。排序时，需要注意一下几点。
+
+- 不能对既有数字又有字符串值的列表排序，因为Python不知道如何比较它们。
+
+- sort()方法对字符串排序时，使用“ASCII字符顺序”，而不是实际的字典顺序。
+
+- 如果需要按照普通的字典顺序来排序，就在sort()方法调用时，将关键字参数key设置为str.lower。它不会修改列表中的实际值。
+
+- 可以指定reverse关键字为True来对列表进行倒序排列
+
+```python
+pet = ['dog', 'cat', 'Tiger', 'panda']
+pet.sort()
+print(pet)
+pet.sort(reverse=True)
+print(pet)
+pet.sort(reverse=True, key=str.lower)
+print(pet)
+
+
+```
+
+
+
+
+
+
 
 
 
