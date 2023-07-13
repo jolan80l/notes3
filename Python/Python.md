@@ -847,6 +847,174 @@ print(list('hello'))
 
 ```
 
+## 引用
+
+在下面的代码中，当修改了spam的值，cheese并不会变化。下面代码会输出100, 50
+
+```python
+spam = 50
+cheese = spam
+spam = 100
+print(str(spam) + ', ' + str(cheese))
+
+
+```
+
+但是列表并不是这样，列表的赋值是引用赋值。
+
+```python
+box = [1, 2, 3, 4, 5]
+container = box
+container[1] = 10
+print(box)
+print(container)
+
+
+```
+
+### 传递引用
+
+在函数调用时，如果参数是一个列表，那么它传递的是引用，而不是值，如下面代码，输出结果是：[1, 2, 3, 'Hello']
+
+```python
+def eggs(some_parameter):
+    some_parameter.append('Hello')
+
+
+spam = [1, 2, 3]
+eggs(spam)
+print(spam)
+
+```
+
+### copy和deepcopy
+
+如果不想在列表互相赋值时使用引用，可以使用copy模块。如果列表中嵌套列表，则使用copy模块中的deepcopy方法。
+
+```python
+import copy
+
+box = ['1', '2', '3']
+container = copy.copy(box)
+container[1] = '5'
+print(box)
+print(container)
+
+```
+
+```
+['1', '2', '3']
+['1', '5', '3']
+```
+
+# 字典和结构化数据
+
+字典输入时带花括号{}
+
+```python
+my_dog = {'name': 'mc', 'size': 'little', 'age': '5'}
+# {'name': 'mc', 'size': 'little', 'age': '5'}
+print(my_dog)
+# little
+print(my_dog['size'])
+
+
+```
+
+尝试访问字典中不存在的键，将导致KeyError出错信息。
+
+可以用in来判断字典key是否在字典中。
+
+```python
+my_dog = {'name': 'mc', 'size': 'little', 'age': '5'}
+# {'name': 'mc', 'size': 'little', 'age': '5'}
+print(my_dog)
+# little
+print(my_dog['size'])
+if 'size' in my_dog:
+    # dog size is:little
+    print('dog size is:' + my_dog['size'])
+
+```
+
+## keys() values() items()
+
+分别用来获取字典的key列表，value列表，和键值对列表。但是它们不是真正的列表，它们不能被修改，没有append()方法。
+
+```python
+dic = {'goods': 'cup', 'color': 'white'}
+for v in dic.values():
+    # cup
+    # white
+    print(v)
+for k in dic.keys():
+    # goods
+    # color
+    print(k)
+for item in dic.items():
+    # ('goods', 'cup')
+    # ('color', 'white')
+    print(item)
+
+```
+
+## 检查字典中是否存在键和值
+
+```python
+dic = {'goods': 'cup', 'color': 'white'}
+if 'goods' in dic.keys():
+    print(True)
+else:
+    print(False)
+if 'cup' in dic.values():
+    print(True)
+else:
+    print(False)
+# 这是'goods' in dic.keys()的简单写法，
+if 'goods' in dic:
+    print(True)
+else:
+    print(False)
+    
+```
+
+## get()
+
+当无法确定一个键是否存在时，可以使用get方法，当存在这个键则返回对应键的值，否则返回备用值。如果不指定备用值并且字典中没有这个键，则返回None。
+
+```python
+dic = {'goods': 'cup', 'color': 'white'}
+# cup
+print(dic.get('goods', 'whatever'))
+# whatever
+print(dic.get('age', 'whatever'))
+# None
+print(dic.get('age'))
+
+
+```
+
+## setdefault()
+
+setdefault给字典中没有的键设置一个默认值
+
+```python
+dic = {'goods': 'cup', 'color': 'white'}
+dic.setdefault('factory', 'made in China')
+dic.setdefault('color', 'black')
+# made in China
+print(dic.get('factory', 'America'))
+# white
+print(dic.get('color', 'red'))
+
+
+```
+
+
+
+
+
+
 
 
 
