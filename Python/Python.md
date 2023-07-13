@@ -792,7 +792,7 @@ print(s)
 
 ```
 
-查看下面的代码，虽然box的结果都是[4, 5, 6]，但是第一种是覆盖了box中的值，而第二种是修改了box。
+查看下面的代码，虽然box的结果都是[4, 5, 6]，但是第一种是覆盖了box中的值，而第二种是修改了box。
 
 ```python
 box = [1, 2, 3]
@@ -874,7 +874,7 @@ print(container)
 
 ### 传递引用
 
-在函数调用时，如果参数是一个列表，那么它传递的是引用，而不是值，如下面代码，输出结果是：[1, 2, 3, 'Hello']
+在函数调用时，如果参数是一个列表，那么它传递的是引用，而不是值，如下面代码，输出结果是：[1, 2, 3, 'Hello']
 
 ```python
 def eggs(some_parameter):
@@ -889,7 +889,7 @@ print(spam)
 
 ### copy和deepcopy
 
-如果不想在列表互相赋值时使用引用，可以使用copy模块。如果列表中嵌套列表，则使用copy模块中的deepcopy方法。
+如果不想在列表互相赋值时使用引用，可以使用copy模块。如果列表中嵌套列表，则使用copy模块中的deepcopy方法。
 
 ```python
 import copy
@@ -939,7 +939,7 @@ if 'size' in my_dog:
 
 ## keys() values() items()
 
-分别用来获取字典的key列表，value列表，和键值对列表。但是它们不是真正的列表，它们不能被修改，没有append()方法。
+分别用来获取字典的key列表，value列表，和键值对列表。但是它们不是真正的列表，它们不能被修改，没有append()方法。
 
 ```python
 dic = {'goods': 'cup', 'color': 'white'}
