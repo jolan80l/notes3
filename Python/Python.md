@@ -1029,11 +1029,11 @@ pprint.pprint(dic)
 
 # 字符串操作
 
-如何输出I'm the king，print('I'm the king')这样是不行的，因为Python认为字符串在I之后就结束了。
+如何输出I'm the king，print('I'm the king')这样是不行的，因为Python认为字符串在I之后就结束了。
 
 ## 双引号
 
-可以使用双引号输出。
+可以使用双引号输出。
 
 ```python
 print("I'm the king")
@@ -1080,7 +1080,7 @@ your king
 
 ## 多行注释
 
-两边用三个双引号包围的内容是多行文本注释。
+两边用三个双引号包围的内容是多行文本注释。
 
 ## 字符串下标和切片
 
@@ -1120,13 +1120,13 @@ print('cats' not in 'cats and dogs')
 
 ## 常用字符串方法
 
-- upper()：字符串转大写
+- upper()：字符串转大写
 
 - lower()：字符串转小写
 
 - isupper()：是否全部是大写字符串，返回True或False
 
-- islower()：是否全是小写字符串
+- islower()：是否全是小写字符串
 
 - isalpha()返回True，如果字符串只包含字母，并且非空；
 
@@ -1142,13 +1142,13 @@ print('cats' not in 'cats and dogs')
 
 - endswith()：是否以参数中的字符串结束
 
-- join()：join()方法在一个字符串上调用，参数是一个字符串列表，返回一个字符串。', '.join(['cats', 'rats', 'bats'])这段代码，将输出'cats, rats, bats'
+- join()：join()方法在一个字符串上调用，参数是一个字符串列表，返回一个字符串。', '.join(['cats', 'rats', 'bats'])这段代码，将输出'cats, rats, bats'
 
 - split()：split()方法它针对一个字符串调用，返回一个字符串列表。
 
 - rjust()和ljust（）：rjust()和ljust()字符串方法返回调用它们的字符串的填充版本，通过插入空格来对齐文本。这两个方法的第一个参数是一个整数长度，用于对齐字符串。比如'Hello'.rjust(10)，输出'      Hello'。这两个方法还可以加入第二个参数，也就是用来填充的字符串，'Hello'.rjust(10, '*')，输出' *****Hello'。
 
-- center()：它表示居中对齐，用法同上。
+- center()：它表示居中对齐，用法同上。
 
 - strip()、rstrip()和lstrip()：删除字符串的两边空格\制表符\换行符、右侧空格\制表符\换行符、左侧空格\制表符\换行符。
 
