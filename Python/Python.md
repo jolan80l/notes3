@@ -1010,6 +1010,162 @@ print(dic.get('color', 'red'))
 
 ```
 
+## 漂亮打印
+
+```python
+import pprint
+
+dic = {'goods': 'cup', 'color': 'white'}
+dic.setdefault('factory', 'made in China')
+dic.setdefault('color', 'black')
+# made in China
+print(dic.get('factory', 'America'))
+# white
+print(dic.get('color', 'red'))
+print(dic)
+pprint.pprint(dic)
+
+```
+
+# 字符串操作
+
+如何输出I'm the king，print('I'm the king')这样是不行的，因为Python认为字符串在I之后就结束了。
+
+## 双引号
+
+可以使用双引号输出。
+
+```python
+print("I'm the king")
+
+```
+
+## 转义符
+
+可以使用转义符输出，在Python中，反斜杠\表示转移。
+
+```python
+print('I\'m the king')
+
+```
+
+![avatar](img/8.jpg)
+
+## 原始字符串
+
+可以在字符串开始的引号之前加上r，使它成为原始字符串。“原始字符串”完全忽略所有的转义字符，打印出字符串中所有的倒斜杠
+
+```python
+# I\'m the king
+print(r'I\'m the king')
+
+```
+
+## 三重引号
+
+三个引号可以包括任何形式的字符串，包括单引号。
+
+```python
+print('''Dear darling
+    I'm your king
+your king''')
+
+```
+
+```
+Dear darling
+    I'm your king
+your king
+```
+
+## 多行注释
+
+两边用三个双引号包围的内容是多行文本注释。
+
+## 字符串下标和切片
+
+可以像操作列表一样操作字符串。但是下面的这些操作没有真正改变这些字符串的值。
+
+```python
+strs = 'Hello Python!'
+# H
+print(strs[0])
+# o
+print(strs[4])
+# !
+print(strs[-1])
+# Hello Python!
+print(strs)
+
+
+
+
+```
+
+## in和not in
+
+```python
+# True
+print('Hello' in 'Hello World')
+# True
+print('Hello' in 'Hello')
+# False
+print('HELLO' in 'Hello World')
+# True
+print('' in 'spam')
+# False
+print('cats' not in 'cats and dogs')
+
+```
+
+## 常用字符串方法
+
+- upper()：字符串转大写
+
+- lower()：字符串转小写
+
+- isupper()：是否全部是大写字符串，返回True或False
+
+- islower()：是否全是小写字符串
+
+- isalpha()返回True，如果字符串只包含字母，并且非空；
+
+- isalnum()返回True，如果字符串只包含字母和数字，并且非空；
+
+- isdecimal()返回True，如果字符串只包含数字字符，并且非空；
+
+- isspace()返回True，如果字符串只包含空格、制表符和换行，并且非空；
+
+- istitle()返回True，如果字符串仅包含以大写字母开头、后面都是小写字母的单词。
+
+- startswith()：是否以参数中的字符串开始
+
+- endswith()：是否以参数中的字符串结束
+
+- join()：join()方法在一个字符串上调用，参数是一个字符串列表，返回一个字符串。', '.join(['cats', 'rats', 'bats'])这段代码，将输出'cats, rats, bats'
+
+- split()：split()方法它针对一个字符串调用，返回一个字符串列表。
+
+- rjust()和ljust（）：rjust()和ljust()字符串方法返回调用它们的字符串的填充版本，通过插入空格来对齐文本。这两个方法的第一个参数是一个整数长度，用于对齐字符串。比如'Hello'.rjust(10)，输出'      Hello'。这两个方法还可以加入第二个参数，也就是用来填充的字符串，'Hello'.rjust(10, '*')，输出' *****Hello'。
+
+- center()：它表示居中对齐，用法同上。
+
+- strip()、rstrip()和lstrip()：删除字符串的两边空格\制表符\换行符、右侧空格\制表符\换行符、左侧空格\制表符\换行符。
+
+## pyperclip模块
+
+pyperclip模块有copy()和paste()函数，可以向计算机的剪贴板发送文本，或从它接收文本。将程序的输出发送到剪贴板，使它很容易粘贴到邮件、文字处理程序或其他软件中。
+
+```python
+import pyperclip
+pyperclip.copy('Hello world!')
+
+
+```
+
+在运行完这段代码后，直接使用粘贴快捷键将输出：'Hello world!'
+
+
 
 
 
