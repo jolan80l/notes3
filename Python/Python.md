@@ -1165,6 +1165,204 @@ pyperclip.copy('Hello world!')
 
 在运行完这段代码后，直接使用粘贴快捷键将输出：'Hello world!'
 
+# 模糊查找和正则表达式
+
+Python中所有正则表达式的函数都在re模块中。向re.compile()传入一个字符串值，表示正则表达式，它将返回一个Regex模式对象（或者就简称为Regex对象).
+
+Regex对象的search()方法查找传入的字符串，寻找该正则表达式的所有匹配。如果字符串中没有找到该正则表达式模式，search()方法将返回None。如果找到了该模式，search()方法将返回一个Match对象。Match对象有一个group()方法，它返回被查找字符串中实际匹配的文本。
+
+```python
+import re
+
+phone_number_regex = re.compile(r'\d\d\d\d\d\d\d\d\d\d\d')
+mo = phone_number_regex.search('我的电话号码是13888888888')
+print(mo.group())
+
+
+
+```
+
+//todo
+
+# 读写文件
+
+
+## 文件夹分隔符
+
+os.path.join()函数用来将参数中的路径使用操作系统的文件夹分隔符分割，然后返回一个路径字符串。但是如果使用的是类似linux的操作系统，得到路径的最前面是没有斜杠的。
+
+```python
+import os
+
+# root/python
+print(os.path.join('root', 'python'))
+
+```
+
+## 当前路径
+
+使用os.getcwd()获取当前路径。
+
+```python
+import os
+
+# /Users/xxx/zMe/python_workspace/day_one_study
+print(os.getcwd())
+
+```
+
+## 绝对路径和相对路径
+
+“绝对路径”，总是从根文件夹开始。
+
+“相对路径”，它相对于程序的当前工作目录。
+
+还有点（.）和点点（..）文件夹。它们不是真正的文件夹，而是可以在路径中使用的特殊名称。单个的句点（“点”）用作文件夹目名称时，是“这个目录”的缩写。两个句点（“点点”）意思是父文件夹。
+
+相对路径开始处的.\是可选的。例如，.\spam.txt和spam.txt指的是同一个文件。
+
+
+## 创建文件夹
+
+os.makedirs()函数创建新文件夹
+
+```python
+import os
+
+# 当前目录下新建了一个new_folder的文件夹。也可以使用绝对路径创建
+os.mkdir('new_folder')
+
+```
+
+## 相对路径和绝对路径常用方法
+
+- 调用os.path.abspath(path)将返回参数的绝对路径的字符串。这是将相对路径转换为绝对路径的简便方法。
+
+- 调用os.path.isabs(path)，如果参数是一个绝对路径，就返回True，如果参数是一个相对路径，就返回False。
+
+- 调用os.path.relpath(path, start)将返回从start路径到path的相对路径的字符串。如果没有提供start，就使用当前工作目录作为开始路径。
+
+- 调用os.path.dirname(path)将返回一个字符串，它包含path参数中最后一个斜杠之前的所有内容。
+
+- 调用os.path.basename(path)将返回一个字符串，它包含path 参数中最后一个斜杠之后的所有内容。
+
+- 如果同时需要一个路径的目录名称和基本名称，就可以调用os.path.split()
+
+- os.path.sep：根据操作系统获取文件夹分隔符
+
+```python
+import os
+
+# /Users/xxx/zMe/python_workspace/day_one_study
+print(os.path.abspath('.'))
+# True.实际上当前并没有这个绝对路径。所以它更像一个正则验证，而无法判断路径实际是否存在
+print(os.path.isabs('/Tester/my/python'))
+# ../../../../..
+print(os.path.relpath('/', '.'))
+# .   一个点就是它返回的内容
+print(os.path.dirname('./day_one_study-hello.py'))
+# day_one_study-hello.py
+print(os.path.basename('./day_one_study-hello.py'))
+# ('/usr/lib/zsh/5.8.1/zsh', 'attr.so')
+print(os.path.split('/usr/lib/zsh/5.8.1/zsh/attr.so'))
+# ('/usr/lib/zsh/5.8.1', 'zsh')
+print(os.path.split('/usr/lib/zsh/5.8.1/zsh'))
+# /
+print(os.path.sep)
+
+
+```
+
+## 查看文件大小和内容
+
+- 调用os.path.getsize(path)将返回path参数中文件的字节数
+
+- 调用os.listdir(path)将返回文件名字符串的列表，包含path参数中的每个文件（请注意，这个函数在os模块中，而不是os.path）
+
+```python
+import os
+
+# 167520
+print(os.path.getsize('/usr/lib/zsh/5.8.1/zsh/attr.so'))
+# ['5.8.1']
+print(os.listdir('/usr/lib/zsh'))
+
+```
+
+## 检查路径有效性
+
+```python
+import os
+
+# False
+print(os.path.exists('F:\\'))
+
+```
+
+## 文件读写过程
+
+在Python中，读写文件有3个步骤：
+
+1．调用open()函数，返回一个File对象。
+
+2．调用File对象的read()或write()方法。
+
+3．调用File对象的close()方法，关闭该文件。
+
+### open()函数打开文件
+
+要用open()函数打开一个文件，就要向它传递一个字符串路径，表明希望打开的文件。open默认是读模式，当文件以读模式打开时，Python只让你从文件中读取数据，你不能以任何方式写入或修改它。在Python中打开文件时，读模式是默认的模式。但如果你不希望依赖于Python的默认值，也可以明确指明该模式，向open()传入字符串'r'，作为第二个参数。所以open('路径', 'r')和open('路径')做的事情一样。
+
+### 读取文件内容
+
+如果你希望将整个文件的内容读取为一个字符串值，就使用File对象的read()方法。
+
+或者，可以使用readlines()方法，从该文件取得一个字符串的列表。列表中的每个字符串就是文本中的每一行。
+
+```python
+import os.path
+
+# 在当前路径创建一个hello_python.txt的文件，文件内容为：hello python! \n hello world!
+file_path = os.path.abspath('hello_python.txt')
+hello_file = open(file_path)
+# hello python!
+# hello world!
+print(hello_file.read())
+# [] 注释调上面一行将输出：['hello python!\n', 'hello world!']
+print(hello_file.readlines())
+
+
+```
+
+### 写入文件
+
+写模式将覆写原有的文件，从头开始，就像你用一个新值覆写一个变量的值。将'w'作为第二个参数传递给open()，以写模式打开该文件。
+
+不同的是，添加模式将在已有文件的末尾添加文本。你可以认为这类似向一个变量中的列表添加内容，而不是完全覆写该变量。将'a'作为第二个参数传递给open()，以添加模式打开该文件。
+
+如果传递给 open()的文件名不存在，写模式和添加模式都会创建一个新的空文件。在读取或写入文件后，调用close()方法，然后才能再次打开该文件。
+
+```python
+# 首先，以写模式打开当前目录的file_operate.txt文件（当前目录无此文件）
+file_operate = open('file_operate.txt', 'w')
+# 向文件中写入first of all, write something.\n  在写入前，由于文件不存在会先创建文件
+# write()方法不会像print()函数那样，在字符串的末尾自动添加换行字符。必须自己添加该字符。
+file_operate.write('first of all, write something.\n')
+# 关闭文件
+file_operate.close()
+# 以添加模式打开文件
+file_operate = open('file_operate.txt', 'a')
+# 向文件中写入then, append some word.
+file_operate.write('then, append some word.')
+# 关闭文件
+file_operate.close()
+# 读取文件
+file_operate = open('file_operate.txt', 'r')
+content = file_operate.read()
+print(content)
+
+
+```
 
 
 
