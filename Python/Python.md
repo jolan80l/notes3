@@ -1364,12 +1364,125 @@ print(content)
 
 ```
 
+## 用shelve模块保存变量
+
+利用shelve模块，程序可以从硬盘中恢复变量的数据，让你在程序中添加“保存”和“打开”功能。
+
+```python
+import shelve
+
+# 将配置写入文件
+config = shelve.open('config')
+pets = ['cat', 'doy', 'slave']
+config['pets'] = pets
+config.close()
+# 从配置文件读取
+config = shelve.open('config')
+# 打印类型 <class 'shelve.DbfilenameShelf'>
+print(type(config))
+# ['cat', 'doy', 'slave']
+print(config['pets'])
+config.close()
+
+```
+
+如果使用文本编辑器打开这个配置文件，无法正常阅读，如下所示。
+
+![avatar](img/9.jpg)
+
+## 用pprint.pformat()函数保存变量
+
+pprint.pformat()函数与pprint.pprint()函数类似，将返回同样的文本字符串，但不是打印它。pprint.pformat()函数将提供一个字符串，你可以将它写入.py文件。
+
+```python
+import pprint
+
+dogs = [{'name': 'Sophie', 'desc': 'chubby'}, {'name': 'Polka', 'desc': 'fluffy'}]
+print(pprint.pformat(dogs))
+file_obj = open('my_dogs.py', 'w')
+file_obj.write('dogs=' + pprint.pformat(dogs) + '\n')
+file_obj.close()
+
+```
+
+# 组织文件
+
+## shutil模块
+
+### 赋值文件和文件夹
+
+调用shutil.copy(source, destination)，将路径source处的文件复制到路径destination处的文件夹（source和destination都是字符串）。
+
+shutil.copytree()将复制整个文件夹，以及它包含的文件夹和文件。
+
+```python
+import os
+import shutil
+
+# 将my_dogs.py文件复制到当前目录的shutil文件夹。需要提前创建shutil文件夹，否则会报错No such file or directory: 'shutil/'
+new_file_path = shutil.copy('my_dogs.py', os.path.join('shutil', ''))
+# shutil/my_dogs.py
+print(new_file_path)
+# 将my_dogs.py文件复制到当前目录的shutil文件夹并命名为my_cats.py
+new_file_path = shutil.copy('my_dogs.py', os.path.join('shutil', 'my_cats.py'))
+# shutil/my_cats.py
+print(new_file_path)
+# 将shutil复制到20230721文件夹。20230721文件夹中也包含my_dogs.py和my_cats.py两个文件
+new_file_path = shutil.copytree('shutil', '20230721')
+# 20230721
+print(new_file_path)
+
+```
+
+### 文件夹的移动和改名
+
+调用shutil.move(source, destination)，将路径source处的文件夹移动到路径destination，并返回新位置的绝对路径的字符串。
+
+```python
+import os
+import shutil
+
+# 将my_dogs.py移动到shutil文件夹
+# 如果shutil中存在这个文件，报错：Destination path 'shutil/my_dogs.py' already exists
+shutil.move('my_dogs.py', 'shutil')
+# 将shutil文件夹中的my_dogs.py移动到当前文件夹，并重命名为my_pets.py
+shutil.move('shutil' + os.path.sep + 'my_dogs.py', 'my_pets.py')
+
+```
+
+### 永久删除文件和文件夹
+
+用os.unlink(path)将删除path处的文件。
+调用os.rmdir(path)将删除path处的文件夹。该文件夹必须为空，其中没有任何文件和文件夹。
+调用shutil.rmtree(path)将删除path处的文件夹，它包含的所有文件和文件夹都会被删除。
+
+```python
+import os
+
+for filename in os.listdir():
+    if filename.endswith('.rts'):
+        # 如果不确定有哪些文件夹，可以先进行打印print(filename)，并且把下面的删除语句去掉。笔者不小心把当前路径的py文件全部删除了，哭死
+        os.unlink(filename)
+
+```
+
+### send2trash安全删除
+
+因为Python内建的shutil.rmtree()函数不可恢复地删除文件和文件夹，所以用起来可能有危险。删除文件和文件夹的更好方法，是使用第三方的send2trash模块。你可以在终端窗口中运行pip install send2trash，安装该模块（参见附录A，其中更详细地解释了如何安装第三方模块）。
 
 
+```python
+import send2trash
 
+# 创建一个bacon.txt文件
+baconFile = open('bacon.txt', 'a')
+# 写入文本
+baconFile.write('Bacon is not a vegetable.')
+baconFile.close()
+# 被删除的bacon.txt文件可以在废纸篓（mac电脑）中找到
+send2trash.send2trash('bacon.txt')
 
-
-
+```
 
 
 
