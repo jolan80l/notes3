@@ -1484,7 +1484,84 @@ send2trash.send2trash('bacon.txt')
 
 ```
 
+## 遍历目录树
 
+os.walk()函数可以遍历目录下的所有文件和文件夹。
+
+os.walk()在循环的每次迭代中，返回3个值：
+
+1．当前文件夹名称的字符串。
+
+2．当前文件夹中子文件夹的字符串的列表。
+
+3．当前文件夹中文件的字符串的列表。
+
+在当前文件夹创建main文件夹，main文件夹中创建sub1和sub2文件夹，在sub2文件夹中创建file.txt文件。然后执行下面代码。
+
+```python
+import os
+
+for folderName, sub_folders, filenames in os.walk('main'):
+    print('The current folder is ' + folderName)
+
+    for sub_folder in sub_folders:
+        print('SUB FOLDER OF ' + folderName + ': ' + sub_folder)
+    for filename in filenames:
+        print('FILE INSIDE ' + folderName + ': ' + filename)
+
+```
+
+```
+The current folder is main
+SUB FOLDER OF main: sub1
+SUB FOLDER OF main: sub2
+FILE INSIDE main: .DS_Store
+The current folder is main/sub1
+The current folder is main/sub2
+FILE INSIDE main/sub2: file.txt
+```
+
+## 用zipfile模块解压文件
+
+利用zipfile模块中的函数，Python程序可以创建和打开（或解压）ZIP文件。
+
+ZipFile对象的extractall()方法从ZIP文件中解压缩所有文件和文件夹，放到当前工作目录中。
+
+```python
+import zipfile
+
+# 在当前路径创建zip_folder文件夹，进入该文件夹创建inner_folder文件夹、file.txt文件、other_file.txt
+zip_holder = zipfile.ZipFile('zip_folder.zip')
+# ['zip_folder/', 'zip_folder/file.txt',
+# 'zip_folder/.DS_Store', '__MACOSX/zip_folder/._.DS_Store', 'zip_folder/other_file.txt', 'zip_folder/inner_folder/']
+# 有一些隐藏文件
+print(zip_holder.namelist())
+file_holder = zip_holder.getinfo('zip_folder/other_file.txt')
+# 0 为什么是0和2这里没搞明白
+print(file_holder.file_size)
+# 2
+print(file_holder.compress_size)
+# 解压到当前文件夹
+zip_holder.extractall()
+zip_holder.close()
+
+
+```
+
+
+
+要创建你自己的压缩ZIP文件，必须以“写模式”打开ZipFile对象，即传入'w'作为第二个参数（这类似于向open()函数传入'w'，以写模式打开一个文本文件）。
+
+```python
+import zipfile
+
+# 创建一个new.zip压缩文件
+new_zip = zipfile.ZipFile('new.zip', 'w')
+# 在压缩文件中写入hello_python.txt文件。这个文件必须是当前存在的
+new_zip.write('hello_python.txt', compress_type=zipfile.ZIP_DEFLATED)
+new_zip.close()
+
+```
 
 
 
