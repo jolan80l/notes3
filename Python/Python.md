@@ -1521,7 +1521,7 @@ The current folder is main/sub2
 FILE INSIDE main/sub2: file.txt
 ```
 
-## 用zipfile模块解压文件
+## 用zipfile模块解压文件
 
 利用zipfile模块中的函数，Python程序可以创建和打开（或解压）ZIP文件。
 
@@ -1562,6 +1562,349 @@ new_zip.write('hello_python.txt', compress_type=zipfile.ZIP_DEFLATED)
 new_zip.close()
 
 ```
+
+# 调试
+
+## 抛出异常
+
+抛出异常使用raise语句。在代码中，raise语句包含以下部分：
+
+raise关键字；
+对Exception函数的调用；
+传递给Exception函数的字符串，包含有用的出错信息。
+
+如果没有try和except语句覆盖抛出异常的raise语句，该程序就会崩溃，并显示异常的出错信息。
+
+通常是调用该函数的代码知道如何处理异常，而不是该函数本身。
+
+```python
+def box_print(symbol, width, height):
+    if len(symbol) != 1:
+        raise Exception('Symbol must be a single character string.')
+    if width <= 2:
+        raise Exception('Width must be greater than 2.')
+    if height <= 2:
+        raise Exception('Height must be greater than 2.')
+    print(symbol * width)
+    for i in range(height - 2):
+        print(symbol + (' ' * (width - 2)) + symbol)
+        print(symbol * width)
+
+
+for sym, w, h in (('*', 4, 4), ('O', 20, 5), ('x', 1, 3), ('ZZ', 3, 3)):
+    try:
+        box_print(sym, w, h)
+    except Exception as err:
+        print('An exception happened: ' + str(err)) 
+```
+
+## 错误写到日志文件
+
+但你也可以调用traceback.format_exc()，得到它的字符串形式。
+
+```python
+import traceback
+
+try:
+    raise Exception('This is the error message')
+
+except:
+    error_file = open('error.txt', 'w')
+    error_file.write(traceback.format_exc())
+    error_file.close()
+    print('the traceback info was written to error.txt.')
+
+```
+
+![avatar](img/10.png)
+
+
+## 断言
+
+assert语句包含以下部分：
+
+assert关键字；
+条件（即求值为True或False的表达式）；
+逗号；
+当条件为False时显示的字符串。
+
+```python
+open_status = 'open'
+# 正常执行，不会输出任何字符串
+assert open_status == 'open', 'the open status should be open'
+open_status = 'close'
+# AssertionError: the open status should be open
+assert open_status == 'open', 'the open status should be open'
+
+```
+
+## 禁用断言
+
+在运行Python时传入-O选项，可以禁用断言。如果你已完成了程序的编写和测试，不希望执行心智正常检测，从而减慢程序的速度，这样就很好（尽管大多数断言语句所花的时间，不会让你觉察到速度的差异）。
+
+
+## 日志
+
+### 使用日志模块
+
+通过下面的代码片段，可以通过合适的日志进行调试
+
+```python
+import logging
+
+logging.basicConfig(level=logging.DEBUG, format=' %(asctime)s - %(levelname)s-   %(message)s')
+logging.debug('Start of program')
+
+
+def factorial(n):
+    logging.debug('Start of factorial(%s)' % n)
+    total = 1
+    # 错误写法
+    for i in range(n + 1):
+        # 正确下发是下面的，阶乘计算应该从1开始，上面的默认是从0开始
+        # for i in range(1, n + 1):
+        total *= i
+        logging.debug('i is ' + str(i) + ', total is ' + str(total))
+    logging.debug('End of factorial(%s)' % n)
+    return total
+
+
+print(factorial(5))
+logging.debug('End of program')
+
+```
+
+```
+2023-07-23 16:27:18,111 - DEBUG-   Start of program
+ 2023-07-23 16:27:18,111 - DEBUG-   Start of factorial(5)
+ 2023-07-23 16:27:18,111 - DEBUG-   i is 0, total is 0
+ 2023-07-23 16:27:18,111 - DEBUG-   i is 1, total is 0
+ 2023-07-23 16:27:18,111 - DEBUG-   i is 2, total is 0
+ 2023-07-23 16:27:18,111 - DEBUG-   i is 3, total is 0
+ 2023-07-23 16:27:18,111 - DEBUG-   i is 4, total is 0
+ 2023-07-23 16:27:18,111 - DEBUG-   i is 5, total is 0
+ 2023-07-23 16:27:18,111 - DEBUG-   End of factorial(5)
+ 2023-07-23 16:27:18,111 - DEBUG-   End of program
+0
+```
+
+日志消息的好处在于，你可以随心所欲地在程序中想加多少就加多少，稍后只要加入一次logging.disable（logging.CRITICAL）调用，就可以禁止日志。不像print()，logging模块使得显示和隐藏日志信息之间的切换变得很容易。
+
+### 日志级别
+
+![avatar](img/11.png)
+
+### 禁用日志
+
+在调试完程序后，你可能不希望所有这些日志消息出现在屏幕上。logging. disable() 函数禁用了这些消息，这样就不必进入到程序中，手工删除所有的日志调用。只要向logging.disable() 传入一个日志级别，它就会禁止该级别和更低级别的所有日志消息
+
+```python
+import logging
+
+logging.basicConfig(level=logging.DEBUG, format=' %(asctime)s - %(levelname)s-   %(message)s')
+
+# 输出
+logging.warning('warning error')
+# 禁用WARNING 级别一下的日志
+logging.disable(logging.WARNING)
+# 不输出
+logging.debug('debug message')
+# 输出
+logging.critical('Critical error!Critical error!')
+# 输出
+logging.error('Error!Error')
+
+```
+
+如果需要禁用所有日志，可以使用logging.disable(logging.CRITICAL)
+
+## 将日志记录到文件
+
+除了将日志消息显示在屏幕上，还可以将它们写入文本文件。logging.basic Config() 函数接受filename关键字参数。
+
+```python
+import logging
+logging.basicConfig(level=logging.DEBUG, format=' %(asctime)s - %(levelname)s-   %(message)s')
+
+logging.debug('record debug info to file')
+
+```
+![avatar](img/12.png)
+
+## IDLE调试器
+
+略
+
+# 从Web抓取信息
+
+## 通过浏览器打开指定URL
+
+下面的代码将打开浏览器，并自动访问github。
+
+```python
+import webbrowser
+
+webbrowser.open('https://www.github.com')
+
+```
+
+## 处理命令行参数
+
+创建map_it.py文件
+
+```python
+#! python3
+# map_it.py - Launches a map in the browser using an address from the
+# command line or clipboard.
+
+import sys
+import webbrowser
+
+import pyperclip
+
+# sys.argv表示获取启动参数
+if len(sys.argv) > 1:
+    # 打印从命令行获取启动的参数
+    print(sys.argv)
+    # 1:表示从第一个元素开始截取，也就是说去掉第0个元素
+    address = ''.join(sys.argv[1:])
+    # 打印address
+    print(address)
+else:
+    # 从剪切板获取地址
+    address = pyperclip.paste()
+# 打来浏览器地址，并且在后面拼接url参数
+webbrowser.open('https://www.google.com/maps/place/' + address)
+
+
+```
+
+在命令行执行，看到如下输出，同时浏览器会打开代码中的地址。
+
+```shell
+python map_it.py 870 Valencia St, San Francisco, CA 94110
+['map_it.py', '870', 'Valencia', 'St,', 'San', 'Francisco,', 'CA', '94110']
+870ValenciaSt,SanFrancisco,CA94110
+```
+![avatar](img/13.jpg)
+
+## 从web下载文件
+
+requests模块让你很容易从Web下载文件，requests模块不是Python自带的，所以必须先安装。通过命令行，运行pip install requests。
+
+### 使用requests下载一个网页
+
+requests.get()函数接受一个要下载的URL字符串。通过在requests.get()的返回值上调用type()，你可以看到它返回一个Response对象，其中包含了Web服务器对你的请求做出的响应。
+
+```python
+import requests
+
+res = requests.get('https://www.gutenberg.org/cache/epub/1112/pg1112.txt')
+# 查看res的类型<class 'requests.models.Response'>
+print(type(res))
+# 判断返回码
+success = res.status_code == requests.codes.ok
+# True
+print(success)
+# 返回结果文本长度：179380
+print(len(res.text))
+# 打印文本的前250个字符
+# ﻿The Project Gutenberg EBook of Romeo and Juliet, by William Shakespeare
+#
+#
+# *******************************************************************
+# THIS EBOOK WAS ONE OF PROJECT GUTENBERG'S EARLY FILES PRODUCED AT A
+# TIME WHEN PROOFING METHODS AND TOO
+print(res.text[:250])
+
+```
+
+### 检查错误
+
+检查成功有一种简单的方法，就是在Response对象上调用raise_for_status()方法。如果下载文件出错，这将抛出异常。如果下载成功，就什么也不做。
+
+```python
+import requests
+
+res = requests.get('https://inventwithpython.com/page_that_does_not_exist')
+try:
+    # requests.exceptions.HTTPError: 404 Client Error: Not Found for url: https://inventwithpython.com/page_that_does_not_exist
+    res.raise_for_status()
+except Exception as exc:
+    # There was a problem: 404 Client Error: Not Found for url: https://inventwithpython.com/page_that_does_not_exist
+    print('There was a problem: %s' % exc)
+
+
+```
+
+## 保存下载文件
+
+为了将Web页面写入到一个文件，可以使用for循环和Response对象的iter_content()方法。
+
+```python
+import requests
+
+# 获取URL资源
+res = requests.get('https://www.gutenberg.org/cache/epub/1112/pg1112.txt')
+# 判断是否成功
+res.raise_for_status()
+# 以二进制方式打开文件
+# wb:二进制写入，如果该文件已存在则打开文件，并从开头开始编辑，即原有内容会被删除。如果该文件不存在，创建新文件。一般用于非文本文件如图片等
+# https://blog.csdn.net/BJ1599449/article/details/125256878
+play_file = open('RomeoAndJuliet.txt', 'wb')
+# 每次读取100000字节，并写入文件
+for chunk in res.iter_content(100000):
+    play_file.write(chunk)
+# 关闭文件
+play_file.close()
+
+```
+![avatar](img/14.jpg)
+
+## 用BeautifulSoup模块解析HTML
+
+BeautifulSoup模块的名称是bs4（表示Beautiful Soup，第4版）。要安装它，需要在命令行中运行pip install beautifulsoup4.
+
+现在，先创建一个example.html文件，用来后面解析测试使用，代码如下.
+
+```html
+<!-- This is the example.html example file. -->
+
+<html><head><title>The Website Title</title></head>
+<body>
+<p>Download my <strong>Python</strong> book from <a href="https://
+inventwithpython.com">my website</a>.</p>
+<p class="slogan">Learn Python the easy way!</p>
+<p>By <span id="author">Al Sweigart</span></p>
+</body></html>
+
+```
+
+### 从HTML创建一个BeautifulSoup对象
+
+bs4.BeautifulSoup()函数调用时需要一个字符串，其中包含将要解析的HTML。
+
+```python
+import bs4
+import requests
+
+# 获取URL资源
+res = requests.get('https://nostarch.com')
+# 判断状态
+res.raise_for_status()
+# 创建BeautifulSoup对象
+no_starch_soup = bs4.BeautifulSoup(res.text)
+# 查看类型
+print(type(no_starch_soup))
+
+```
+
+### 用select()方法寻找元素
+
+![avatar](img/15.jpg)
+
+select()方法将返回一个Tag对象的列表，这是Beautiful Soup表示一个HTML元素的方式。针对BeautifulSoup对象中的HTML的每次匹配，列表中都有一个Tag对象。Tag值可以传递给str()函数，显示它们代表的HTML标签。Tag值也可以有attrs属性，它将该Tag的所有HTML属性作为一个字典。
+
 
 
 
