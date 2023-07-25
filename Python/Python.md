@@ -1486,7 +1486,7 @@ send2trash.send2trash('bacon.txt')
 
 ## 遍历目录树
 
-os.walk()函数可以遍历目录下的所有文件和文件夹。
+os.walk()函数可以遍历目录下的所有文件和文件夹。
 
 os.walk()在循环的每次迭代中，返回3个值：
 
@@ -1737,7 +1737,7 @@ logging.debug('record debug info to file')
 
 # 从Web抓取信息
 
-## 通过浏览器打开指定URL
+## 通过浏览器打开指定URL
 
 下面的代码将打开浏览器，并自动访问github。
 
@@ -1905,7 +1905,29 @@ print(type(no_starch_soup))
 
 select()方法将返回一个Tag对象的列表，这是Beautiful Soup表示一个HTML元素的方式。针对BeautifulSoup对象中的HTML的每次匹配，列表中都有一个Tag对象。Tag值可以传递给str()函数，显示它们代表的HTML标签。Tag值也可以有attrs属性，它将该Tag的所有HTML属性作为一个字典。
 
+```python
+import bs4
 
+# 打开example.html文件
+exampleFile = open('example.html')
+# 创建BeautifulSoup对象
+exampleSoup = bs4.BeautifulSoup(exampleFile.read())
+# 获取id属性为author的元素列表
+elems = exampleSoup.select('#author')
+# 打印元素类型 <class 'bs4.element.ResultSet'>
+print(type(elems))
+# 打印元素长度 1
+print(len(elems))
+# 打印第元素类型 <class 'bs4.element.Tag'>
+print(type(elems[0]))
+# 打印第一个元素的文本内容 Al Sweigart
+print(elems[0].getText())
+# 打印第一个元素的html代码 <span id="author">Al Sweigart</span>
+print(str(elems[0]))
+# 打印第一个元素的属性 {'id': 'author'}
+print(elems[0].attrs)
+
+```
 
 
 
