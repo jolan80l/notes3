@@ -1930,11 +1930,116 @@ print(elems[0].attrs)
 ```
 
 
+### 通过元素的属性获取数据
+
+Tag对象的get()方法让我们很容易从元素中获取属性值。向该方法传入一个属性名称的字符串，它将返回该属性的值。
+
+```python
+import bs4
+
+soup = bs4.BeautifulSoup(open('example.html'))
+# 查找span元素
+spanElem = soup.select('span')[0]
+# <span id="author">Al Sweigart</span>
+print(str(spanElem))
+id_element = spanElem.get('id')
+# author
+print(id_element)
+# True
+print(spanElem.get('some_nonexistent_addr') is None)
+# {'id': 'author'}
+print(spanElem.attrs)
+
+```
+
+## 用selenium模块控制浏览器
+
+### 用selenium启动浏览器
+
+导入selenium的模块import selenium，而是要运行from selenium import webdriver
+
+```python
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+
+# 设置浏览器不会自动关闭
+opt = Options()
+opt.add_experimental_option('detach', True)
+browser = webdriver.Chrome(options=opt)
+# <class 'selenium.webdriver.chrome.webdriver.WebDriver'>
+print(type(browser))
+# 使用浏览器打开参数中的地址
+browser.get('https://www.baidu.com')
+
+```
+
+### 在页面中寻找元素
+
+WebDriver对象有好几种方法，用于在页面中寻找元素。它们被分成findelement和findelements方法。findelement方法返回一个WebElement对象，代表页面中匹配查询的第一个元素。findelements方法返回WebElement_*对象的列表，包含页面中所有匹配的元素。
+
+![avatar](img/16.png)
+
+除了*_by_tag_name()方法，所有方法的参数都是区分大小写的。如果页面上没有元素匹配该方法要查找的元素，selenium模块就会抛出NoSuchElement异常。如果你不希望这个异常让程序崩溃，就在代码中添加try和except语句。
+
+一旦有了WebElement对象，就可以读取表11-4中的属性，或调用其中的方法，了解它的更多功能。
+
+![avatar](img/17.png)
+
+### 点击页面
+
+findelement和findelements方法返回的WebElement对象有一个click()方法，模拟鼠标在该元素上点击。
+
+下面的例子将打开springcloud的官网，并点击SAMPLES按钮。
+
+![avatar](img/18.png)
+
+```python
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
+
+# 设置浏览器不会自动关闭
+opt = Options()
+opt.add_experimental_option('detach', True)
+browser = webdriver.Chrome(options=opt)
+browser.get('https://spring.io/projects/spring-cloud')
+link_elem = browser.find_element(By.XPATH, '//*[@id="main"]/div[1]/div/div[2]/div[1]/ul/li[3]/a')
+print(type(link_elem))
+link_elem.click()
+
+```
+
+### 填写并提交表单
+
+向Web页面的文本字段发送击键，只要找到那个文本字段的< input>或< textarea>元素，然后调用send_keys()方法。
+
+```python
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
+
+# 设置浏览器不会自动关闭
+opt = Options()
+opt.add_experimental_option('detach', True)
+browser = webdriver.Chrome(options=opt)
+# 自动登录139邮箱
+browser.get('https://mail.10086.cn/')
+email_elem = browser.find_element(By.ID, 'txtMobile')
+email_elem.send_keys('not_my_real_email@gmail.com')
+password_elem = browser.find_element(By.ID, 'txtSms')
+password_elem.send_keys('123456')
+password_elem.submit()
+
+```
+
+![avatar](img/19.png)
 
 
+### 特殊键
 
+selenium有一个模块，针对不能用字符串值输入的键盘击键。它的功能非常类似于转义字符。这些值保存在selenium.webdriver.common.keys模块的属性中。在程序顶部运行from selenium.webdriver. common.keys import Keys。
 
-
+![avatar](img/20.png)
 
 
 
